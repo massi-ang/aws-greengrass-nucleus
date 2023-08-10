@@ -52,7 +52,9 @@ import static com.aws.greengrass.util.Utils.inputStreamToString;
 public class UnixPlatform extends Platform {
 
     public static final Pattern PS_PID_PATTERN = Pattern.compile("(\\d+)\\s+(\\d+)");
-    public static final String PRIVILEGED_USER = "root";
+    public static final String PRIVILEGED_USER = System.getProperty("privilegedUser");
+
+    public static final String PRIVILEGED_GROUP = System.getProperty("privilegedGroup");
     public static final String STDOUT = "stdout";
     public static final String STDERR = "stderr";
     protected static final int SIGTERM = 15;
@@ -339,12 +341,12 @@ public class UnixPlatform extends Platform {
 
     @Override
     public String getPrivilegedGroup() {
-        return PRIVILEGED_USER;
+        return PRIVILEGED_GROUP == null ? getPrivilegedUser() : PRIVILEGED_GROUP;
     }
 
     @Override
     public String getPrivilegedUser() {
-        return PRIVILEGED_USER;
+        return PRIVILEGED_USER == null ? "root" : PRIVILEGED_USER;
     }
 
     @Override
